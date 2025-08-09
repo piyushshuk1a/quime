@@ -1,69 +1,80 @@
-# React + TypeScript + Vite
+# Quizme
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Create, share, and take quizzes on any topic with our intelligent quiz platform. Perfect for educators, teams, and anyone looking to test their knowledge.
 
-Currently, two official plugins are available:
+## Table of Contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Getting Started](#getting-started)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Running the Application](#usage)
+- [Scripts](#contact)
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Follow these instructions to set up and run the QuizMe frontend on your local machine for development and testing purposes.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## Prerequisites
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+Ensure you have the following installed:
+
+- **Node.js** (v22, use .nvmrc for exact version)
+- **npm** (Node Package Manager)
+
+---
+
+## Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone <repository-url>
+   cd quizme # assuming you cloned in quizme folder
+   ```
+
+2. Install dependencies
+
+   ```bash
+   npm install
+   ```
+
+---
+
+## Running the Application
+
+### Development Mode
+
+To run the application in development mode with hot-reloading:
+
+```bash
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Production Mode
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+npm run build
+npm run preview
 ```
+
+---
+
+## Scripts
+
+The following scripts are available in the package.json:
+
+`dev`: Runs the application in development mode with hot-reloading.
+
+`preview`: Starts the application in production mode.
+
+`build`: Compiles the TypeScript code into JavaScript.
+
+`lint`: Runs ESLint to check for code quality issues.
+
+`lint:fix`: Fixes linting issues automatically.
+
+`format`: Formats the code using Prettier.
+
+`format:check`: Checks if the code is formatted correctly.

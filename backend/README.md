@@ -34,7 +34,7 @@ Ensure you have the following installed:
 
    ```bash
    git clone <repository-url>
-   cd quizme-backend
+   cd quizme
    ```
 
 2. Install dependencies
