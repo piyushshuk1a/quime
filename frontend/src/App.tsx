@@ -1,10 +1,16 @@
 import { Button, Stack } from '@mui/material';
 
+import { AppLogo } from '@/components';
+
 export const App = () => {
   return (
     <div>
-      <h1>Hello Quizme</h1>
       <Stack gap={10} padding={12}>
+        <AppLogo />
+        <AppLogo width={80} height={80} />
+      </Stack>
+      <Stack gap={10} padding={12}>
+        <h1>Hello Quizme</h1>
         <div>
           <Button variant="contained">Primary</Button>
         </div>
