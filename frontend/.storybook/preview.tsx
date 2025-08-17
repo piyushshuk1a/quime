@@ -1,6 +1,7 @@
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { type Preview } from '@storybook/react-vite';
 import React from 'react';
+import { BrowserRouter } from 'react-router';
 
 import { THEME, THEME_COLORS } from '../src/theme';
 
@@ -33,8 +34,10 @@ const preview: Preview = {
 export const decorators = [
   (Story) => (
     <ThemeProvider theme={THEME}>
-      <CssBaseline />
-      <Story />
+      <BrowserRouter>
+        <CssBaseline />
+        <Story />
+      </BrowserRouter>
     </ThemeProvider>
   ),
 ];
