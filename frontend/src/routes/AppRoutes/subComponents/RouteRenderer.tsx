@@ -8,7 +8,21 @@ export const RouteRenderer = ({
   isGuarded,
 }: Omit<RouteConfigItem, 'path'>) => {
   return (
-    <Suspense fallback={<CircularProgress />}>
+    <Suspense
+      fallback={
+        <div
+          style={{
+            width: '100%',
+            height: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <CircularProgress />
+        </div>
+      }
+    >
       {isGuarded ? <GuardedRoute>{element}</GuardedRoute> : element}
     </Suspense>
   );
