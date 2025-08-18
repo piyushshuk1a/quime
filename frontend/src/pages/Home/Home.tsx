@@ -1,4 +1,4 @@
-import { Button, Stack } from '@mui/material';
+import { Button, Link, Stack } from '@mui/material';
 
 import { AppLogo } from '@/components';
 
@@ -9,6 +9,7 @@ export const Home = () => {
         <AppLogo />
         <AppLogo size={80} />
       </Stack>
+      <Link to="/about">Go to About</Link>
       <Stack gap={10} padding={12}>
         <h1>Hello Quizme</h1>
         <div>
