@@ -1,11 +1,10 @@
-import { Box, Typography } from '@mui/material';
-import { NavLink } from 'react-router';
+import { Box, Link, Typography } from '@mui/material';
 
 import { AppLogo } from '../AppLogo';
 
 export const LogoLink = () => {
   return (
-    <NavLink to="/" style={{ textDecoration: 'none' }}>
+    <Link to="/">
       <Box display="flex" gap={6} alignItems="center">
         <AppLogo />
         <Typography
@@ -27,6 +26,6 @@ export const LogoLink = () => {
           QuizMaster
         </Typography>
       </Box>
-    </NavLink>
+    </Link>
   );
 };
