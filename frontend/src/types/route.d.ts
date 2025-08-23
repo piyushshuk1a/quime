@@ -15,4 +15,10 @@ type RouteConfigItem = {
    * @note Guarded route is rendered after validating login state, access level & tenant
    */
   isGuarded: boolean;
+
+  /**
+   * Denotes if the navbar should be rendered on the page or not
+   * @default false
+   */
+  hideNavbar?: boolean;
 };
