@@ -111,12 +111,12 @@ export const TYPOGRAPHY_CONSTANTS: TypographyConstantsType = {
       lineHeight: 16,
     },
     body1: {
-      fontSize: 14,
-      lineHeight: 18,
-    },
-    body2: {
       fontSize: 16,
       lineHeight: 22,
+    },
+    body2: {
+      fontSize: 18,
+      lineHeight: 24,
     },
   },
 
