@@ -11,6 +11,9 @@ export const MuiButton: Components['MuiButton'] = {
       '&.MuiButton-containedSecondary': {
         border: `1px solid ${alpha(GRAYSCALE[200], 0.4)}`,
       },
+      '&.Mui-disabled': {
+        border: '1px solid rgba(255, 255, 255, 0.12)',
+      },
     },
   },
 };

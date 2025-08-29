@@ -2,7 +2,7 @@ import { createTheme, type PaletteColor } from '@mui/material';
 
 import { pxToRem } from '@/utils';
 
-import { MuiButton, MuiLink } from './common';
+import { MuiButton, MuiDialog, MuiDialogActions, MuiLink } from './common';
 import { THEME_COLORS } from './theme.constants';
 import { TYPOGRAPHY } from './typography';
 
@@ -14,7 +14,7 @@ export const THEME = createTheme({
   },
   spacing: pxToRem,
   typography: TYPOGRAPHY,
-  components: { MuiLink, MuiButton },
+  components: { MuiLink, MuiButton, MuiDialog, MuiDialogActions },
 });
 
 declare module '@mui/material/styles' {
