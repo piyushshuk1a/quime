@@ -6,3 +6,5 @@ export const USER_ROLES = {
 export const USER_ERROR_MESSAGES = {
   invalidRole: 'Invalid role',
 };
+
+export const ROLE_NAMESPACE = 'https://myapp.com/role';

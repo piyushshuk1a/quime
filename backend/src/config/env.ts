@@ -12,6 +12,8 @@ const envSchema = Joi.object({
   AUTH0_DOMAIN: Joi.string().required(),
   AUTH0_M2M_CLIENT_ID: Joi.string().required(),
   AUTH0_M2M_CLIENT_SECRET: Joi.string().required(),
+  AUTH0_AUDIENCE: Joi.string().uri().required(),
+  AUTH0_ISSUER: Joi.string().uri().required(),
 }).unknown(); // Allow additional environment variables
 
 // Validate the environment variables
@@ -31,4 +33,6 @@ export const config = {
   auth0Domain: envVars.AUTH0_DOMAIN as string,
   auth0M2MClientId: envVars.AUTH0_M2M_CLIENT_ID as string,
   auth0M2MClientSecret: envVars.AUTH0_M2M_CLIENT_SECRET as string,
+  auth0Audience: envVars.AUTH0_AUDIENCE as string,
+  auth0Issuer: envVars.AUTH0_ISSUER as string,
 };
