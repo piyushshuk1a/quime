@@ -8,3 +8,11 @@ export const USER_ROLES = {
 export const SIGNUP_ROLE_ACTIONS = {
   update: 'update/selectedRole',
 };
+
+export const API_REQUEST_TYPES = {
+  post: 'POST',
+  put: 'PUT',
+  get: 'GET',
+  patch: 'PATCH',
+  delete: 'DELETE',
+} as const;
