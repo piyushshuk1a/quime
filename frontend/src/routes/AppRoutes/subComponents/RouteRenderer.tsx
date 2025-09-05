@@ -2,6 +2,7 @@ import { Box, CircularProgress } from '@mui/material';
 import { Suspense } from 'react';
 
 import { Navbar } from '@/components';
+import { useRoleSync } from '@/hooks';
 
 import { GuardedRoute } from './GuardedRoute';
 
@@ -10,6 +11,8 @@ export const RouteRenderer = ({
   isGuarded,
   hideNavbar,
 }: Omit<RouteConfigItem, 'path'>) => {
+  const { roleConfirmation } = useRoleSync();
+
   return (
     <Suspense
       fallback={
@@ -34,6 +37,7 @@ export const RouteRenderer = ({
         </>
       )}
       {isGuarded ? <GuardedRoute>{element}</GuardedRoute> : element}
+      {roleConfirmation}
     </Suspense>
   );
 };

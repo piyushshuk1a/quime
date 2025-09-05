@@ -37,7 +37,8 @@ const executeApiRequest = async <TResponse extends object | void, TPayload>(
       authorizationParams: { audience: import.meta.env.VITE_AUTH0_AUDIENCE },
     });
 
-    const response = await fetch(path as string, {
+    const basePath = import.meta.env.VITE_API_BASE_URL;
+    const response = await fetch(`${basePath}${path}`, {
       method,
       headers: {
         Authorization: `Bearer ${token}`,

@@ -8,12 +8,12 @@ import { type GenericParams, type UseFetchArgs } from './swr.types';
 
 /**
  * Handles making a GET request to the given endpoint
- * @param url The URL along with query-params
+ * @param path The path along with query-params
  * @returns The response from the API
  * @throws a javascript error if any error occurs during the API call
  */
 const fetcher = async <TResponse = unknown>(
-  url: string,
+  path: string,
   getAccessTokenSilently: Auth0ContextInterface['getAccessTokenSilently'],
 ) => {
   try {
@@ -21,7 +21,8 @@ const fetcher = async <TResponse = unknown>(
       authorizationParams: { audience: import.meta.env.VITE_AUTH0_AUDIENCE },
     });
 
-    const response = await fetch(url, {
+    const basePath = import.meta.env.VITE_API_BASE_URL;
+    const response = await fetch(`${basePath}${path}`, {
       method: API_REQUEST_TYPES.get,
       headers: {
         Authorization: `Bearer ${token}`,
