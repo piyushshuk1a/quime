@@ -1,5 +1,11 @@
 import { Footer } from '@/components';
-import { Categories, Features, GetStarted, HeroSection } from '@/containers';
+import {
+  Categories,
+  Features,
+  GetStarted,
+  HeroSection,
+  HowItWorks,
+} from '@/containers';
 
 export const Home = () => {
   return (
@@ -7,6 +13,7 @@ export const Home = () => {
       <HeroSection />
       <Features />
       <Categories />
+      <HowItWorks />
       <GetStarted />
       <Footer />
     </>

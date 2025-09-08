@@ -35,7 +35,7 @@ export const GRAYSCALE: Pick<CustomColor, 100 | 200 | 900> = {
   900: '#000000',
 };
 
-export const NAVBAR_BG_COLOR = '#1F2937';
+export const NAVBAR_BG_COLOR = '#253046';
 
 /**
  * Custom theme colors

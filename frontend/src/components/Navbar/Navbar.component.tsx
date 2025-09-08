@@ -20,6 +20,7 @@ export const Navbar = () => {
         height: '72px',
         padding: '0 24px',
         background: NAVBAR_BG_COLOR,
+        boxShadow: '0 0 8px black',
         position: 'fixed',
         width: '100vw',
         top: 0,
@@ -34,7 +35,7 @@ export const Navbar = () => {
         alignItems="center"
       >
         <LogoLink />
-        <Box display="flex" gap={42}>
+        <Box display="flex" gap={42} position="relative" right={60}>
           <Link
             sx={{ fontSize: pxToRem(16), opacity: 0.7, fontWeight: 600 }}
             to="#features"
