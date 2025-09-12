@@ -1,52 +1,43 @@
-import {
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  InputLabel,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  Select,
-  Stack,
-  TextField,
-} from '@mui/material';
+import { Stack, Tab, Tabs } from '@mui/material';
+import { useState, type PropsWithChildren } from 'react';
 
 import { Container } from '@/components';
-import { Header } from '@/containers';
+import { Header, QuestionPanel } from '@/containers';
+
+const TabPanel = ({
+  index,
+  active,
+  children,
+}: PropsWithChildren<{ index: number; active: number }>) => {
+  return (
+    <div role="tabpanel" hidden={index != active}>
+      {index === active ? children : null}
+    </div>
+  );
+};
 
 export const CreateQuiz = () => {
+  const [activeTab, setActiveTab] = useState<number>(0);
+
   return (
     <Stack gap={12} style={{ padding: 24 }} alignItems="center">
       <Container width="100%">
         <Header />
+        <Tabs
+          value={activeTab}
+          sx={{ mb: 20 }}
+          onChange={(_e, index) => setActiveTab(index)}
+        >
+          <Tab label="Manual Creation" />
+          <Tab label="AI Generation" />
+        </Tabs>
+        <TabPanel active={activeTab} index={0}>
+          <QuestionPanel />
+        </TabPanel>
+        <TabPanel active={activeTab} index={1}>
+          <h3>Tab Panel</h3>
+        </TabPanel>
       </Container>
-      <TextField label="TextField" />
-      <FormControl>
-        <InputLabel id="demo-simple-select-label">Age</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          label="Age"
-        >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-      </FormControl>
-      <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
-      <FormControl>
-        <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
-        <RadioGroup
-          aria-labelledby="demo-radio-buttons-group-label"
-          defaultValue="female"
-          name="radio-buttons-group"
-        >
-          <FormControlLabel value="female" control={<Radio />} label="Female" />
-          <FormControlLabel value="male" control={<Radio />} label="Male" />
-          <FormControlLabel value="other" control={<Radio />} label="Other" />
-        </RadioGroup>
-      </FormControl>
     </Stack>
   );
 };
