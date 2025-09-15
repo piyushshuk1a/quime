@@ -37,3 +37,10 @@ export const QUIZ_CATEGORIES = [
   'Travel',
   'Video Games',
 ];
+
+export const QUIZ_COMPLEXITY = {
+  easy: 'Easy',
+  medium: 'Medium',
+  hard: 'Hard',
+  advanced: 'Advanced',
+} as const;

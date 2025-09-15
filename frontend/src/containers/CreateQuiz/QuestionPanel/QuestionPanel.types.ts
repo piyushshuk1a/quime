@@ -11,3 +11,14 @@ export type QuestionPanelProps = {
   correctAnswer?: string[];
   point?: number;
 };
+
+export type OptionType = { id: string; label: string; checked: boolean };
+
+export type QuestionPreviewProps = {
+  options: OptionType[];
+  questionText: string;
+  points: string;
+  questionType: string;
+  order: number;
+  onEdit?: () => void;
+};

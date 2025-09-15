@@ -5,6 +5,7 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   IconButton,
   InputLabel,
   MenuItem,
@@ -16,27 +17,40 @@ import {
   Typography,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { Button } from '@/components';
 import { RED } from '@/theme';
 import { pxToRem } from '@/utils';
 
-import { QUESTION_TYPES } from './QuestionPanel.config';
+import { FORM_ERRORS, QUESTION_TYPES } from './QuestionPanel.config';
+import { QuestionPreview } from './QuestionPreview';
 
-import type { QuestionPanelProps, QuestionType } from './QuestionPanel.types';
+import type {
+  OptionType,
+  QuestionPanelProps,
+  QuestionType,
+} from './QuestionPanel.types';
 
 export const QuestionPanel = ({ order }: QuestionPanelProps) => {
   const [questionType, setQuestionType] = useState<string>(
     QUESTION_TYPES.singleSelect,
   );
-  const [options, setOptions] = useState<
-    { id: string; label: string; checked: boolean }[]
-  >([
+  const [options, setOptions] = useState<OptionType[]>([
     { id: '1', label: '', checked: false },
     { id: '2', label: '', checked: false },
   ]);
+  const [points, setPoints] = useState<string>('1');
+  const [questionText, setQuestionText] = useState<string>('');
+  const [validationErrors, setValidationErrors] = useState<{
+    questionText?: string;
+    options?: string;
+    answer?: string;
+    points?: string;
+  }>({});
+  const [hasError, setHasError] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const [showPreview, setShowPreview] = useState(false);
 
   const handleOptionLabelChange = (id: string, newLabel: string) => {
     const option = options.find(({ id: optionId }) => id === optionId);
@@ -48,11 +62,11 @@ export const QuestionPanel = ({ order }: QuestionPanelProps) => {
       return;
     }
 
-    setOptions((prevOptions) =>
-      prevOptions.map((option) =>
+    setOptions((prevOptions) => [
+      ...prevOptions.map((option) =>
         option.id === id ? { ...option, label: newLabel } : option,
       ),
-    );
+    ]);
   };
 
   const handleMultiSelectAnsChange = (id: string, checked: boolean) => {
@@ -96,6 +110,68 @@ export const QuestionPanel = ({ order }: QuestionPanelProps) => {
     setQuestionType(type);
   };
 
+  const validateFields = useCallback(() => {
+    const errors: typeof validationErrors = {};
+
+    // Validate question text
+    if (!questionText.trim()) {
+      errors.questionText = FORM_ERRORS.questionTextRequired;
+    }
+
+    // Validate options
+    if (options.length < 2) {
+      errors.options = FORM_ERRORS.twoOptionRequired;
+    } else if (options.some((option) => !option.label.trim())) {
+      errors.options = FORM_ERRORS.optionLabelRequired;
+    }
+
+    // Validate answer selection
+    if (!options.some((option) => option.checked)) {
+      errors.answer = FORM_ERRORS.answerRequired;
+    }
+
+    // Validate points
+    const pointsValue = parseInt(points);
+    if (!points || isNaN(pointsValue) || pointsValue <= 0) {
+      errors.points = FORM_ERRORS.pointsRequired;
+    }
+
+    setValidationErrors(errors);
+
+    const isValid = Object.keys(errors).length === 0;
+
+    return isValid;
+  }, [setValidationErrors, points, options, questionText]);
+
+  // Validate on every change if errors has been reported
+  useEffect(() => {
+    if (hasError) validateFields();
+  }, [hasError, questionText, options, points, validateFields]);
+
+  const handleConfirm = () => {
+    if (validateFields()) {
+      setShowPreview(true);
+    } else {
+      setHasError(true);
+      enqueueSnackbar('Please fix the errors before confirming.', {
+        variant: 'error',
+      });
+    }
+  };
+
+  if (showPreview) {
+    return (
+      <QuestionPreview
+        options={options}
+        questionText={questionText}
+        questionType={questionType}
+        points={points}
+        order={order}
+        onEdit={() => setShowPreview(false)}
+      />
+    );
+  }
+
   return (
     <Card
       variant="outlined"
@@ -112,8 +188,11 @@ export const QuestionPanel = ({ order }: QuestionPanelProps) => {
           fullWidth
           sx={{ mb: 24 }}
           rows={4}
+          value={questionText}
+          onChange={(e) => setQuestionText(e.target.value)}
+          error={!!validationErrors.questionText}
+          helperText={validationErrors.questionText}
         />
-
         <FormControl fullWidth sx={{ mb: 24 }}>
           <InputLabel>Question Type</InputLabel>
           <Select
@@ -141,7 +220,14 @@ export const QuestionPanel = ({ order }: QuestionPanelProps) => {
               );
             }}
           >
-            <InputLabel sx={{ mb: 12 }}>Answer Options</InputLabel>
+            <Box display="flex" gap={10}>
+              <InputLabel sx={{ mb: 12 }}>Answer Options</InputLabel>
+              {(validationErrors.answer || validationErrors.options) && (
+                <FormHelperText error>
+                  {validationErrors.options ?? validationErrors.answer}
+                </FormHelperText>
+              )}
+            </Box>
             {options.map((option) => (
               <Box key={option.id} display="flex" alignItems="center" mb={8}>
                 <FormControlLabel
@@ -151,6 +237,9 @@ export const QuestionPanel = ({ order }: QuestionPanelProps) => {
                   label={
                     <TextField
                       fullWidth
+                      error={
+                        validationErrors.options ? !option.label?.trim() : false
+                      }
                       placeholder="Enter the option value"
                       value={option.label}
                       onChange={(e) =>
@@ -171,7 +260,14 @@ export const QuestionPanel = ({ order }: QuestionPanelProps) => {
 
         {questionType === QUESTION_TYPES.multiSelect && (
           <Stack gap={2} width="100%">
-            <InputLabel sx={{ mb: 12 }}>Answer Options</InputLabel>
+            <Box display="flex" gap={10}>
+              <InputLabel sx={{ mb: 12 }}>Answer Options</InputLabel>
+              {(validationErrors.answer || validationErrors.options) && (
+                <FormHelperText error>
+                  {validationErrors.options ?? validationErrors.answer}
+                </FormHelperText>
+              )}
+            </Box>
             {options.map((option) => (
               <Box key={option.id} display="flex" alignItems="center" mb={8}>
                 <Checkbox
@@ -182,6 +278,9 @@ export const QuestionPanel = ({ order }: QuestionPanelProps) => {
                   }
                 />
                 <TextField
+                  error={
+                    validationErrors.options ? !option.label?.trim() : false
+                  }
                   fullWidth
                   placeholder="Enter the option value"
                   value={option.label}
@@ -217,8 +316,22 @@ export const QuestionPanel = ({ order }: QuestionPanelProps) => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <TextField label="Points" type="number" />
-          <Button size="large">Confirm</Button>
+          <TextField
+            label="Points"
+            value={points.toString()}
+            onChange={(e) => {
+              const updatedValue = parseInt(e.target.value);
+
+              if (!updatedValue || !isNaN(updatedValue)) {
+                setPoints(isNaN(updatedValue) ? '' : updatedValue.toString());
+              }
+            }}
+            error={!!validationErrors.points}
+            helperText={validationErrors.points}
+          />
+          <Button size="large" onClick={handleConfirm}>
+            Confirm
+          </Button>
         </Box>
       </Stack>
     </Card>

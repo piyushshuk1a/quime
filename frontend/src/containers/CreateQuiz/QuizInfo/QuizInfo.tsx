@@ -2,12 +2,16 @@ import {
   Autocomplete,
   Box,
   Card,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   Stack,
   TextField,
   Typography,
 } from '@mui/material';
 
-import { QUIZ_CATEGORIES } from './QuizInfo.config';
+import { QUIZ_CATEGORIES, QUIZ_COMPLEXITY } from './QuizInfo.config';
 
 export const QuizInfo = () => {
   return (
@@ -27,6 +31,15 @@ export const QuizInfo = () => {
                 <TextField required {...params} label="Category" />
               )}
             />
+            <FormControl fullWidth>
+              <InputLabel>Complexity</InputLabel>
+              <Select label="Complexity">
+                <MenuItem value={QUIZ_COMPLEXITY.easy}>Easy</MenuItem>
+                <MenuItem value={QUIZ_COMPLEXITY.medium}>Medium</MenuItem>
+                <MenuItem value={QUIZ_COMPLEXITY.hard}>Hard</MenuItem>
+                <MenuItem value={QUIZ_COMPLEXITY.advanced}>Advanced</MenuItem>
+              </Select>
+            </FormControl>
           </Box>
           <TextField
             required
