@@ -1,1 +1,1 @@
-export { CreateQuiz as default } from './CreateQuiz';
+export { CreateQuizWithProvider as default } from './CreateQuiz';

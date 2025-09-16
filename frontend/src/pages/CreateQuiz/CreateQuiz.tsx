@@ -1,8 +1,10 @@
 import { Stack, Tab, Tabs } from '@mui/material';
-import { useState, type PropsWithChildren } from 'react';
+import { useEffect, useRef, useState, type PropsWithChildren } from 'react';
 
 import { Container } from '@/components';
 import { Header, QuestionPanel, QuizInfo } from '@/containers';
+import { QUESTION_TYPES } from '@/containers/CreateQuiz/QuestionPanel/QuestionPanel.config';
+import { QuizProvider, useQuizContext } from '@/context';
 
 const TabPanel = ({
   index,
@@ -16,8 +18,27 @@ const TabPanel = ({
   );
 };
 
-export const CreateQuiz = () => {
+const CreateQuiz = () => {
   const [activeTab, setActiveTab] = useState<number>(0);
+  const { questions, addQuestion } = useQuizContext();
+  const isQuestionAdded = useRef<boolean>(false);
+
+  useEffect(() => {
+    if (questions.length === 0 && !isQuestionAdded.current) {
+      isQuestionAdded.current = true;
+
+      addQuestion({
+        order: 0,
+        options: [
+          { id: '1', label: '', checked: false },
+          { id: '2', label: '', checked: false },
+        ],
+        points: '1',
+        questionText: '',
+        questionType: QUESTION_TYPES.singleSelect,
+      });
+    }
+  }, [questions, addQuestion]);
 
   return (
     <Stack gap={12} style={{ padding: 24 }} alignItems="center">
@@ -34,7 +55,9 @@ export const CreateQuiz = () => {
         <TabPanel active={activeTab} index={0}>
           <Stack gap={24}>
             <QuizInfo />
-            <QuestionPanel order={0} />
+            {questions.map((_q, index) => (
+              <QuestionPanel key={index} order={index} />
+            ))}
           </Stack>
         </TabPanel>
         <TabPanel active={activeTab} index={1}>
@@ -44,3 +67,9 @@ export const CreateQuiz = () => {
     </Stack>
   );
 };
+
+export const CreateQuizWithProvider = () => (
+  <QuizProvider>
+    <CreateQuiz />
+  </QuizProvider>
+);
