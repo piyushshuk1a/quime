@@ -94,7 +94,7 @@ export const QuizProvider: React.FC<{ children: React.ReactNode }> = ({
   const getQuizInfoValidationErrors = (quizInfo: QuizInfo) => {
     const validationErrors: QuizInfo['errors'] = {};
 
-    if (!quizInfo.title || quizInfo.title.trim().length < 25) {
+    if (!quizInfo.title || quizInfo.title.trim().length < 10) {
       validationErrors.title = QUIZ_INFO_FORM_ERRORS.title;
     }
 

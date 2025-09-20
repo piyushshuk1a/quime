@@ -7,7 +7,7 @@ export const QUESTION_FORM_ERRORS = {
 };
 
 export const QUIZ_INFO_FORM_ERRORS = {
-  title: 'Title is required and should be at least 25 characters in length',
+  title: 'Title is required and should be at least 10 characters in length',
   category: 'Category is required',
   complexity: 'Complexity is required',
   description:
