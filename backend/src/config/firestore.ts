@@ -4,4 +4,4 @@ export const FIRESTORE_COLLECTIONS = {
   quizzesAttempted: 'quizzesAttempted',
   questions: 'questions',
   invited: 'invited',
-};
+} as const;

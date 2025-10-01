@@ -7,13 +7,14 @@ export interface Option {
 }
 
 export interface Quiz {
-  quizId?: string; // Firestore document ID
+  id?: string; // Firestore document ID
   title: string;
   description: string;
   complexity: Complexity;
   category: string;
   isPublic: boolean;
   totalPoints: number;
+  isPublished?: boolean;
   // invited: Array<{ userId: string; obtainedPoints: number }>; // sub-collection logic
   // questions: Array<Question>; // Moved to sub-collection logic
 }
