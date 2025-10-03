@@ -1,10 +1,10 @@
-import { Timestamp } from 'firebase/firestore'; // Assuming you're using Firebase SDK for Firestore
+import { FieldValue } from '@/firebase';
 
 export interface User {
   userId: string;
   email: string;
   role: 'ADMIN' | 'CANDIDATE';
-  createdAt: Timestamp;
-  lastLoginAt?: Timestamp;
+  createdAt: typeof FieldValue;
+  lastLoginAt?: typeof FieldValue;
   profilePictureUrl?: string;
 }

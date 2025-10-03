@@ -9,5 +9,5 @@ type UserIdParam = {
 export type UpdateRoleRequest = Request<
   UserIdParam,
   unknown,
-  { role: ObjectValuesUnion<typeof USER_ROLES> }
+  { role: ObjectValuesUnion<typeof USER_ROLES>; email: string }
 >;

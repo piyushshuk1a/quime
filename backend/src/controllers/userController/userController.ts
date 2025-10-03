@@ -1,20 +1,34 @@
 import { Response } from 'express';
 
 import { config, USER_ERROR_MESSAGES, USER_ROLES } from '@/config';
+import { FieldValue } from '@/firebase';
+import { updateUser } from '@/services';
 import { getManagementApiToken } from '@/utils';
 
 import { UpdateRoleRequest } from './userController.types';
 
 export const updateRole = async (req: UpdateRoleRequest, res: Response) => {
   const { id } = req.params;
-  const { role } = req.body;
+  const { role, email } = req.body;
 
   // Validate the role
   if (role !== USER_ROLES.admin && role !== USER_ROLES.candidate) {
     return res.status(400).json({ message: USER_ERROR_MESSAGES.invalidRole });
   }
 
+  // Validate the email
+  if (!email?.trim()) {
+    return res.status(400).json({ message: USER_ERROR_MESSAGES.invalidEmail });
+  }
+
   try {
+    await updateUser(id, {
+      email,
+      role,
+      userId: id,
+      createdAt: FieldValue.serverTimestamp(),
+    });
+
     const token = await getManagementApiToken();
     const updateUrl = `https://${config.auth0Domain}/api/v2/users/${id}`;
     const response = await fetch(updateUrl, {

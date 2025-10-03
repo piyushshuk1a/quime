@@ -1,4 +1,4 @@
-import { Timestamp } from 'firebase/firestore';
+import { FieldValue } from '@/firebase';
 
 export interface QuizAttempt {
   attemptId?: string;
@@ -7,7 +7,7 @@ export interface QuizAttempt {
   score: number;
   maxPossibleScore: number;
   percentage: number;
-  completedAt?: Timestamp;
+  completedAt?: typeof FieldValue;
   status: 'completed' | 'in_progress';
   answers?: Array<{
     questionId: string;
