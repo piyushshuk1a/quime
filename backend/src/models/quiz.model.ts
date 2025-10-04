@@ -15,6 +15,9 @@ export interface Quiz {
   isPublic: boolean;
   totalPoints: number;
   isPublished?: boolean;
+  publishedBy?: string;
+  durationMinutes: number;
+  totalQuestions: number;
   // invited: Array<{ userId: string; obtainedPoints: number }>; // sub-collection logic
   // questions: Array<Question>; // Moved to sub-collection logic
 }
