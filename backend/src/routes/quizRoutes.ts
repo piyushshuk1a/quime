@@ -4,7 +4,7 @@ import { checkJwt } from '@/middlewares';
 
 const router = express.Router();
 
-router.get('/', checkJwt, () => {}); // Get all public quizzes
+router.get('/', () => {}); // Get all public quizzes
 router.post('/', checkJwt, () => {}); // Create Quiz
 
 router.get('/:id', checkJwt, () => {}); // Get Quiz

@@ -1,8 +1,8 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 import { config, USER_ERROR_MESSAGES, USER_ROLES } from '@/config';
 import { FieldValue } from '@/firebase';
-import { updateUser } from '@/services';
+import { getInvitedQuizzesForUser, getUserById, updateUser } from '@/services';
 import { getManagementApiToken } from '@/utils';
 
 import { UpdateRoleRequest } from './userController.types';
@@ -57,5 +57,23 @@ export const updateRole = async (req: UpdateRoleRequest, res: Response) => {
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+export const getInvitedQuizzes = async (req: Request, res: Response) => {
+  try {
+    const userId = req.auth?.sub as string;
+
+    const userData = await getUserById(userId);
+
+    if (!userData) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const invitedQuizzes = await getInvitedQuizzesForUser(userData.email);
+    return res.status(200).json(invitedQuizzes);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };

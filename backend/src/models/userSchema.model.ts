@@ -1,10 +1,10 @@
-import { FieldValue } from '@/firebase';
+import admin from 'firebase-admin';
 
 export interface User {
   userId: string;
   email: string;
   role: 'ADMIN' | 'CANDIDATE';
-  createdAt: typeof FieldValue;
-  lastLoginAt?: typeof FieldValue;
+  createdAt: admin.firestore.FieldValue;
+  lastLoginAt?: admin.firestore.FieldValue;
   profilePictureUrl?: string;
 }

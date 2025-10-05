@@ -1,4 +1,4 @@
-import { FieldValue } from '@/firebase';
+import admin from 'firebase-admin';
 
 export interface QuizAttempt {
   attemptId?: string;
@@ -7,7 +7,7 @@ export interface QuizAttempt {
   score: number;
   maxPossibleScore: number;
   percentage: number;
-  completedAt?: typeof FieldValue;
+  completedAt?: admin.firestore.FieldValue;
   status: 'completed' | 'in_progress';
   answers?: Array<{
     questionId: string;
