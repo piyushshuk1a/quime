@@ -1,11 +1,15 @@
 import express from 'express';
 
+import {
+  createQuizController,
+  getAllPublicQuizzesController,
+} from '@/controllers';
 import { checkJwt } from '@/middlewares';
 
 const router = express.Router();
 
-router.get('/', () => {}); // Get all public quizzes
-router.post('/', checkJwt, () => {}); // Create Quiz
+router.get('/', getAllPublicQuizzesController); // Get all public quizzes
+router.post('/', checkJwt, createQuizController); // Create Quiz
 
 router.get('/:id', checkJwt, () => {}); // Get Quiz
 router.put('/:id', checkJwt, () => {}); // Update Quiz

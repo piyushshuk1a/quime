@@ -29,6 +29,53 @@ export const createQuiz = async (
   }
 };
 
+export const updateQuizAndQuestions = async (
+  quizId: string,
+  updatedQuizData: Quiz,
+  updatedQuestions: Question[],
+) => {
+  const quizRef = db.collection(FIRESTORE_COLLECTIONS.quizzes).doc(quizId);
+
+  try {
+    // Run the update operation within a transaction to ensure atomicity.
+    await db.runTransaction(async (transaction) => {
+      // 1. Get the current quiz document to ensure it exists and to potentially use its current data.
+      const quizDoc = await transaction.get(quizRef);
+      if (!quizDoc.exists) {
+        throw new Error(`Quiz with ID ${quizId} not found.`);
+      }
+
+      // 2. Update the main quiz document.
+      const quizUpdatePayload = { ...updatedQuizData };
+      transaction.update(quizRef, quizUpdatePayload);
+
+      // 3. Handle the sub-collection of questions.
+      const questionsRef = quizRef.collection(FIRESTORE_COLLECTIONS.questions);
+      const existingQuestionsQuery = await transaction.get(questionsRef);
+
+      // Batch delete existing questions
+      const batch = db.batch();
+      existingQuestionsQuery.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+      await batch.commit();
+
+      // Add new questions. Firestore will generate new IDs for them.
+      const questionAddPromises = updatedQuestions.map((question) => {
+        const newQuestionRef = questionsRef.doc(); // Auto-generate document ID
+        return transaction.set(newQuestionRef, question);
+      });
+
+      await Promise.all(questionAddPromises);
+    });
+
+    console.log(`Quiz ${quizId} and its questions updated successfully.`);
+  } catch (error) {
+    console.error(`Error updating quiz ${quizId}:`, error);
+    throw new Error(`Failed to update quiz ${quizId}.`);
+  }
+};
+
 export const getQuizById = async (quizId: string): Promise<Quiz | null> => {
   try {
     const quizDocRef = db.collection(FIRESTORE_COLLECTIONS.quizzes).doc(quizId);

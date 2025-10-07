@@ -15,7 +15,7 @@ export interface Quiz {
   isPublic: boolean;
   totalPoints: number;
   isPublished?: boolean;
-  publishedBy?: string;
+  publishedBy: string;
   durationMinutes: number;
   totalQuestions: number;
   // invited: Array<{ userId: string; obtainedPoints: number }>; // sub-collection logic
@@ -23,7 +23,6 @@ export interface Quiz {
 }
 
 export interface Question {
-  questionId?: string; // Firestore document ID
   questionText: string;
   questionType: QuestionType;
   points: number;
