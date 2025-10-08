@@ -76,16 +76,39 @@ export const updateQuizAndQuestions = async (
   }
 };
 
-export const getQuizById = async (quizId: string): Promise<Quiz | null> => {
+export const getQuizById = async (
+  quizId: string,
+): Promise<(Quiz & { questions: Question[] }) | null> => {
   try {
     const quizDocRef = db.collection(FIRESTORE_COLLECTIONS.quizzes).doc(quizId);
     const quizDoc = await quizDocRef.get();
 
     if (!quizDoc.exists) {
+      console.warn(`Quiz with ID "${quizId}" not found.`);
       return null;
     }
 
-    return { id: quizDoc.id, ...(quizDoc.data() as Quiz) };
+    // Fetch questions from the 'questions' sub-collection
+    const questionsCollectionRef = quizDocRef.collection(
+      FIRESTORE_COLLECTIONS.questions,
+    );
+    const questionsQuerySnapshot = await questionsCollectionRef
+      .orderBy('order')
+      .get();
+
+    const questions: Question[] = [];
+    questionsQuerySnapshot.forEach((doc) => {
+      questions.push({ ...(doc.data() as Question) });
+    });
+
+    // Combine quiz data and questions
+    const quizData = {
+      id: quizDoc.id,
+      ...(quizDoc.data() as Quiz),
+      questions: questions,
+    };
+
+    return quizData;
   } catch (error) {
     console.error('Error fetching quiz:', error);
     throw new Error('Could not fetch quiz.');

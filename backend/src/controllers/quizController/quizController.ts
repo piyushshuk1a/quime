@@ -5,6 +5,7 @@ import { db } from '@/firebase';
 import {
   createQuiz,
   getAllPublicQuizzes,
+  getQuizById,
   updateQuizAndQuestions,
 } from '@/services';
 
@@ -79,5 +80,25 @@ export const createQuizController = async (
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const getQuizByIdController = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  const id = req.params.id;
+
+  try {
+    const quizData = await getQuizById(id);
+
+    if (!quizData) {
+      return res.status(200).send({});
+    }
+
+    return res.status(200).json(quizData);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: 'Internal Server Error ' });
   }
 };
