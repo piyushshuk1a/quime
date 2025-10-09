@@ -15,8 +15,21 @@ export const QuizProvider: React.FC<{ children: React.ReactNode }> = ({
     category: '',
     complexity: '',
     description: '',
+    duration: '',
     errors: {},
   });
+
+  const resetCreateForm = () => {
+    setQuestions([]);
+    setQuizInfo({
+      title: '',
+      category: '',
+      complexity: '',
+      description: '',
+      duration: '',
+      errors: {},
+    });
+  };
 
   const addQuestion = (newQuestion: QuestionConfig) => {
     setQuestions((prev) => [...prev, newQuestion]);
@@ -119,6 +132,16 @@ export const QuizProvider: React.FC<{ children: React.ReactNode }> = ({
       validationErrors.description = QUIZ_INFO_FORM_ERRORS.description;
     }
 
+    const duration = parseInt(quizInfo.duration);
+    const durationFloor = parseFloat(quizInfo.duration);
+    if (isNaN(duration)) {
+      validationErrors.duration = QUIZ_INFO_FORM_ERRORS.durationReq;
+    } else if (duration < 1) {
+      validationErrors.duration = QUIZ_INFO_FORM_ERRORS.durationMin;
+    } else if (duration !== durationFloor) {
+      validationErrors.duration = QUIZ_INFO_FORM_ERRORS.durationFloor;
+    }
+
     return validationErrors;
   };
 
@@ -142,6 +165,7 @@ export const QuizProvider: React.FC<{ children: React.ReactNode }> = ({
         validateQuizInfo,
         getQuizInfoValidationErrors,
         deleteQuestion,
+        resetCreateForm,
       }}
     >
       {children}

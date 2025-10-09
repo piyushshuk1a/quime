@@ -12,4 +12,7 @@ export const QUIZ_INFO_FORM_ERRORS = {
   complexity: 'Complexity is required',
   description:
     'Description is required and should be at least 50 characters in length',
+  durationReq: 'Duration is required and should be an integer number',
+  durationMin: 'Duration should be at least one minute.',
+  durationFloor: 'Duration should be an integer number',
 };

@@ -17,15 +17,18 @@ export type QuestionConfig = {
 };
 
 export type QuizInfo = {
+  id?: string;
   title: string;
   category: string;
   complexity: string;
-  description?: string;
+  description: string;
+  duration: string;
   errors?: {
     title?: string;
     category?: string;
     complexity?: string;
     description?: string;
+    duration?: string;
   };
 };
 
@@ -47,6 +50,9 @@ type QuizContextType = {
     question: QuestionConfig,
   ) => NonNullable<QuestionConfig['errors']>;
   deleteQuestion: (order: number) => void;
+
+  // Reset Create Form
+  resetCreateForm: () => void;
 };
 
 export const QuizContext = createContext<QuizContextType | undefined>(
