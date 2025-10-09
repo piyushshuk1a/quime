@@ -42,6 +42,17 @@ export const QuizInfo = () => {
               helperText={errors?.title}
               error={!!errors?.title}
             />
+            <TextField
+              required
+              fullWidth
+              value={quizInfo.duration}
+              onChange={(e) =>
+                updateQuizInfo({ ...quizInfo, duration: e.target.value })
+              }
+              label="Duration (In Minutes)"
+              helperText={errors?.duration}
+              error={!!errors?.duration}
+            />
             <Autocomplete
               sx={{ width: '100%' }}
               options={QUIZ_CATEGORIES}

@@ -1,14 +1,40 @@
 import { RemoveRedEye } from '@mui/icons-material';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { Button } from '@/components';
+import { API_ENDPOINTS } from '@/constants';
 import { useQuizContext } from '@/context';
+import { useMutation } from '@/hooks';
 import { pxToRem } from '@/utils';
 
+import { getQuestionsForApi } from './Header.config';
+
+import type { Complexity, CreateQuizPayload } from './Header.types';
+
 export const Header = () => {
-  const { questions, validateQuizInfo, validateQuestion } = useQuizContext();
+  const {
+    quizInfo,
+    questions,
+    validateQuizInfo,
+    validateQuestion,
+    resetCreateForm,
+  } = useQuizContext();
   const { enqueueSnackbar } = useSnackbar();
+  const { trigger: createQuiz, isMutating: isCreatingQuiz } =
+    useMutation<CreateQuizPayload>({
+      path: API_ENDPOINTS.createQuiz,
+      onSuccess: () => {
+        enqueueSnackbar('Quiz has been created', { variant: 'success' });
+        resetCreateForm();
+      },
+      onError: (error) => {
+        enqueueSnackbar(
+          typeof error === 'string' ? error : 'Something went wrong',
+          { variant: 'error' },
+        );
+      },
+    });
 
   const validateBeforeSubmitOrPreview = () => {
     let hasError = false;
@@ -37,9 +63,19 @@ export const Header = () => {
     }
   };
 
-  const handleSave = (shouldPublish?: boolean) => {
-    console.log('should publish', shouldPublish);
-    validateBeforeSubmitOrPreview();
+  const handleSave = async (shouldPublish?: boolean) => {
+    if (!validateBeforeSubmitOrPreview()) {
+      return;
+    }
+
+    const quizData = {
+      ...quizInfo,
+      isPublished: shouldPublish,
+      durationMinutes: parseInt(quizInfo.duration),
+      complexity: quizInfo.complexity as Complexity,
+      questions: getQuestionsForApi(questions),
+    };
+    await createQuiz(quizData);
   };
 
   return (
@@ -59,18 +95,27 @@ export const Header = () => {
           automatically
         </Typography>
       </Stack>
-      <Box display="flex" gap={16}>
+      <Box display="flex" gap={16} alignItems="center">
+        {isCreatingQuiz && <CircularProgress size={20} />}
         <Button
           color="secondary"
           startIcon={<RemoveRedEye sx={{ fontSize: 16 }} />}
           onClick={handlePreview}
+          disabled={isCreatingQuiz}
         >
           Preview
         </Button>
-        <Button variant="outlined" onClick={() => handleSave()}>
+        <Button
+          variant="outlined"
+          onClick={() => handleSave()}
+          disabled={isCreatingQuiz}
+          sx={{ height: 40 }}
+        >
           Save Draft
         </Button>
-        <Button onClick={() => handleSave(true)}>Publish Quiz</Button>
+        <Button onClick={() => handleSave(true)} disabled={isCreatingQuiz}>
+          Publish Quiz
+        </Button>
       </Box>
     </Box>
   );
