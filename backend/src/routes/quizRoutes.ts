@@ -19,4 +19,5 @@ router.put('/:id/invite', checkJwt, () => {}); // Invite candidates for a quiz
 
 router.put('/:id/start', checkJwt, () => {}); // Start a quiz
 router.put('/:id/submit', checkJwt, () => {}); // Submit a quiz
+
 export default router;

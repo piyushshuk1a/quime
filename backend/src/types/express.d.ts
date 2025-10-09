@@ -11,6 +11,6 @@ declare namespace Express {
   }
 
   export interface Request {
-    auth?: AuthPayload;
+    auth?: { payload: AuthPayload };
   }
 }

@@ -30,8 +30,8 @@ export const createQuizController = async (
   res: Response,
 ) => {
   const { questions, ...quizData } = req.body;
-  const userId = req.auth?.sub as string;
-  const isPublic = req.auth?.[ROLE_NAMESPACE] === USER_ROLES.candidate;
+  const userId = req.auth?.payload?.sub as string;
+  const isPublic = req.auth?.payload?.[ROLE_NAMESPACE] === USER_ROLES.candidate;
   const totalQuestions = questions.length;
 
   let totalPoints = 0;

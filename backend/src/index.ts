@@ -4,7 +4,7 @@ import express from 'express';
 
 import { config, FIRESTORE_COLLECTIONS } from '@/config';
 import { db } from '@/firebase';
-import { userRoutes } from '@/routes';
+import { quizzesRoutes, userRoutes } from '@/routes';
 
 const app = express();
 
@@ -21,6 +21,7 @@ app.get('/health', (_req, res) => {
 });
 
 app.use('/api/users', userRoutes);
+app.use('/api/quizzes', quizzesRoutes);
 
 app.listen(config.port, () => {
   console.log(`Server is running on http://localhost:${config.port}`);

@@ -67,7 +67,7 @@ export const updateRole = async (req: UpdateRoleRequest, res: Response) => {
 
 export const getInvitedQuizzes = async (req: Request, res: Response) => {
   try {
-    const userId = req.auth?.sub as string;
+    const userId = req.auth?.payload?.sub as string;
 
     const userData = await getUserById(userId);
 
@@ -84,7 +84,7 @@ export const getInvitedQuizzes = async (req: Request, res: Response) => {
 };
 
 export const getAllQuizzesForUser = async (req: Request, res: Response) => {
-  const userId = req.auth?.sub as string;
+  const userId = req.auth?.payload?.sub as string;
 
   try {
     const quizzes = await getAllUserQuizzes(userId);
