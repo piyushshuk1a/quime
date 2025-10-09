@@ -48,6 +48,10 @@ const executeApiRequest = async <TResponse extends object | void, TPayload>(
       body: JSON.stringify(payload),
     });
 
+    if (!response.ok) {
+      throw await response.json();
+    }
+
     const data = (await response.json()) as TResponse;
 
     return data;

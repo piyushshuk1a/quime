@@ -30,7 +30,6 @@ const CreateQuiz = () => {
   const { questions, addQuestion } = useQuizContext();
   const isQuestionAdded = useRef<boolean>(false);
   const maxOrder = useRef<number>(0);
-  console.log('questions', questions);
 
   const addNewQuestion = useCallback(
     (order: number) => {

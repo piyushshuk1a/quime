@@ -29,6 +29,10 @@ const fetcher = async <TResponse = unknown>(
       },
     });
 
+    if (!response.ok) {
+      throw await response.json();
+    }
+
     const data = (await response.json()) as TResponse;
     return data;
   } catch (err) {
