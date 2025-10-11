@@ -1,5 +1,6 @@
+import type { QuestionType } from '../QuestionPanel';
+
 export type Complexity = 'Easy' | 'Medium' | 'Hard' | 'Advanced';
-export type QuestionType = 'single-select' | 'multi-select';
 
 export interface Option {
   id: string;
