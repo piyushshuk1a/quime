@@ -7,3 +7,10 @@ export const checkJwt = auth({
   issuerBaseURL: config.auth0Issuer,
   tokenSigningAlg: 'RS256',
 });
+
+export const decodeToken = auth({
+  audience: config.auth0Audience,
+  issuerBaseURL: config.auth0Issuer,
+  tokenSigningAlg: 'RS256',
+  authRequired: false,
+});

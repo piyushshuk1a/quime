@@ -137,11 +137,14 @@ export const getAllUserQuizzes = async (id: string): Promise<Quiz[]> => {
   }
 };
 
-export const getAllPublicQuizzes = async (): Promise<Quiz[]> => {
+export const getAllPublicQuizzes = async (
+  currentUser?: string,
+): Promise<Quiz[]> => {
   try {
     const quizzesSnapshot = await db
       .collection(FIRESTORE_COLLECTIONS.quizzes)
       .where('isPublic', '==', true)
+      .where('publishedBy', '!=', currentUser ?? '')
       .get();
 
     const quizzes: Quiz[] = [];

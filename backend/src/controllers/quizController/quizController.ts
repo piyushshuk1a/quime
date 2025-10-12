@@ -5,6 +5,7 @@ import { db } from '@/firebase';
 import {
   createQuiz,
   getAllPublicQuizzes,
+  getAllUserQuizzes,
   getQuizById,
   updateQuizAndQuestions,
 } from '@/services';
@@ -12,13 +13,23 @@ import {
 import { CreateQuizBody } from './quizController.types';
 
 export const getAllPublicQuizzesController = async (
-  _req: Request,
+  req: Request<unknown, unknown, { currentUserQuizzes: 'yes' | 'no' }>,
   res: Response,
 ) => {
   try {
-    const quizzes = await getAllPublicQuizzes();
+    const { currentUserQuizzes } = req.query;
 
-    return res.status(200).json(quizzes);
+    if (currentUserQuizzes === 'yes' && !req.auth?.payload?.sub) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    if (currentUserQuizzes === 'yes') {
+      const quizzes = await getAllUserQuizzes(req.auth?.payload.sub as string);
+      return res.status(200).json(quizzes);
+    } else {
+      const quizzes = await getAllPublicQuizzes(req.auth?.payload?.sub);
+      return res.status(200).json(quizzes);
+    }
   } catch (error) {
     console.error('Error fetching public quizzes:', error);
     return res.status(500).json({ message: 'Could not fetch quizzes.' });
