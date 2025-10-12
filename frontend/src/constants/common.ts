@@ -21,6 +21,7 @@ export const API_ENDPOINTS = {
   userRole: '/api/users/:id',
   createQuiz: '/api/quizzes',
   getQuiz: '/api/quizzes/:id',
+  listQuizzes: '/api/quizzes',
 } as const;
 
 export const ROLE_NAMESPACE = 'https://myapp.com/role';

@@ -35,7 +35,7 @@ export const Navbar = () => {
         alignItems="center"
       >
         <LogoLink />
-        <Box display="flex" gap={42} position="relative" right={60}>
+        <Box display="flex" gap={42} position="relative" right={32}>
           <Link
             sx={{ fontSize: pxToRem(16), opacity: 0.7, fontWeight: 600 }}
             to="#features"
@@ -50,9 +50,9 @@ export const Navbar = () => {
           </Link>
           <Link
             sx={{ fontSize: pxToRem(16), opacity: 0.7, fontWeight: 600 }}
-            to="/pricing"
+            to="/quiz"
           >
-            About
+            Explore Quizzes
           </Link>
         </Box>
 
