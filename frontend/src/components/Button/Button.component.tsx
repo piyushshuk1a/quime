@@ -43,6 +43,7 @@ export const Button = ({
         ...(color === 'gradient' && gradientStyles),
         ...(color === 'white' && whiteStyles),
         textTransform: 'unset',
+        ...rest.sx,
       }}
     />
   );
