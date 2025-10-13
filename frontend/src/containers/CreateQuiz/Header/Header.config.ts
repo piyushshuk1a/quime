@@ -1,6 +1,6 @@
 import type { QuestionConfig } from '@/context';
 
-import type { QuestionType } from './Header.types';
+import type { QuestionType } from '../QuestionPanel';
 
 export const getQuestionsForApi = (questions: QuestionConfig[]) => {
   const quesData = questions.map(

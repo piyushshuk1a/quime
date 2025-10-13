@@ -1,9 +1,10 @@
 import { RemoveRedEye } from '@mui/icons-material';
 import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import { useNavigate } from 'react-router';
 
 import { Button } from '@/components';
-import { API_ENDPOINTS } from '@/constants';
+import { API_ENDPOINTS, ROUTES } from '@/constants';
 import { useQuizContext } from '@/context';
 import { useMutation } from '@/hooks';
 import { pxToRem } from '@/utils';
@@ -21,12 +22,14 @@ export const Header = () => {
     resetCreateForm,
   } = useQuizContext();
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
   const { trigger: createQuiz, isMutating: isCreatingQuiz } =
     useMutation<CreateQuizPayload>({
       path: API_ENDPOINTS.createQuiz,
       onSuccess: () => {
         enqueueSnackbar('Quiz has been created', { variant: 'success' });
         resetCreateForm();
+        navigate(`${ROUTES.listQuiz}?tab=myQuizzes`);
       },
       onError: (error) => {
         enqueueSnackbar(

@@ -15,17 +15,22 @@ import { type GenericParams, type UseFetchArgs } from './swr.types';
 const fetcher = async <TResponse = unknown>(
   path: string,
   getAccessTokenSilently: Auth0ContextInterface['getAccessTokenSilently'],
+  isAuthenticated: boolean,
 ) => {
   try {
-    const token = await getAccessTokenSilently({
-      authorizationParams: { audience: import.meta.env.VITE_AUTH0_AUDIENCE },
-    });
+    const token = isAuthenticated
+      ? await getAccessTokenSilently({
+          authorizationParams: {
+            audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+          },
+        })
+      : null;
 
     const basePath = import.meta.env.VITE_API_BASE_URL;
     const response = await fetch(`${basePath}${path}`, {
       method: API_REQUEST_TYPES.get,
       headers: {
-        Authorization: `Bearer ${token}`,
+        ...(token && { Authorization: `Bearer ${token}` }),
       },
     });
 
@@ -63,7 +68,7 @@ export const useFetch = <
   params,
   ...rest
 }: UseFetchArgs<TResponse, TPayload, TError>) => {
-  const { getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
 
   let url = path;
   if (params && path) {
@@ -72,7 +77,8 @@ export const useFetch = <
 
   const swrResponse = useSWR<TResponse, TError, string | null>(
     url,
-    (pathArgs) => fetcher<TResponse>(pathArgs, getAccessTokenSilently),
+    (pathArgs) =>
+      fetcher<TResponse>(pathArgs, getAccessTokenSilently, isAuthenticated),
     rest,
   );
 

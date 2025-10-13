@@ -1,15 +1,15 @@
 import { AccessTime, Leaderboard, Stars } from '@mui/icons-material';
-import { Box, Card, Chip, Stack, Typography } from '@mui/material';
+import { alpha, Box, Card, Chip, Stack, Typography } from '@mui/material';
 
 import { Button } from '@/components';
 
 import type { QuizItemProps } from './ListQuiz.types';
 
 const COMPLEXITY_CHIP_COLOR_MAP = {
-  Easy: 'success',
-  Medium: 'info',
-  Hard: 'warning',
-  Advanced: 'error',
+  Easy: alpha('#08CB00', 0.7),
+  Medium: alpha('#FCC61D', 0.6),
+  Hard: alpha('#FFB5B5', 0.8),
+  Advanced: alpha('#EE66A6', 0.7),
 } as const;
 
 export const QuizItem = ({
@@ -32,15 +32,18 @@ export const QuizItem = ({
         justifyContent: 'space-between',
         alignItems: 'center',
         background: '#1F2937',
-        p: 16,
+        p: 24,
       }}
     >
-      <Stack gap={10}>
+      <Stack gap={12}>
         <Box display="flex" alignItems="center" gap={12}>
           <Typography variant="h5">{title}</Typography>
           <Chip
             size="small"
-            color={COMPLEXITY_CHIP_COLOR_MAP[complexity]}
+            sx={{
+              borderColor: COMPLEXITY_CHIP_COLOR_MAP[complexity],
+              color: COMPLEXITY_CHIP_COLOR_MAP[complexity],
+            }}
             variant="outlined"
             label={complexity}
           />
