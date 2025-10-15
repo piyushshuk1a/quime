@@ -6,30 +6,42 @@ import {
   createQuiz,
   getAllPublicQuizzes,
   getAllUserQuizzes,
+  getInvitedQuizzesForUser,
   getQuizById,
   updateQuizAndQuestions,
 } from '@/services';
 
-import { CreateQuizBody } from './quizController.types';
+import {
+  CreateQuizBody,
+  GetAllQuizzesQueryParams,
+} from './quizController.types';
 
 export const getAllPublicQuizzesController = async (
-  req: Request<unknown, unknown, { currentUserQuizzes: 'yes' | 'no' }>,
+  req: Request<unknown, unknown, GetAllQuizzesQueryParams>,
   res: Response,
 ) => {
   try {
-    const { currentUserQuizzes } = req.query;
+    const myQuizzes = req.query.myQuizzes === 'true';
+    const invited = req.query.invited === 'true';
 
-    if (currentUserQuizzes === 'yes' && !req.auth?.payload?.sub) {
+    if ((myQuizzes || invited) && !req.auth?.payload?.sub) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    if (currentUserQuizzes === 'yes') {
-      const quizzes = await getAllUserQuizzes(req.auth?.payload.sub as string);
-      return res.status(200).json(quizzes);
-    } else {
-      const quizzes = await getAllPublicQuizzes(req.auth?.payload?.sub);
-      return res.status(200).json(quizzes);
+    if (invited && !req.query.email) {
+      return res.status(400).json({ message: 'Email is required' });
     }
+
+    let quizzes = {};
+    if (myQuizzes) {
+      quizzes = await getAllUserQuizzes(req.auth?.payload.sub as string);
+    } else if (invited) {
+      quizzes = await getInvitedQuizzesForUser(req.query.email as string);
+    } else {
+      quizzes = await getAllPublicQuizzes(req.auth?.payload?.sub);
+    }
+
+    return res.status(200).json(quizzes);
   } catch (error) {
     console.error('Error fetching public quizzes:', error);
     return res.status(500).json({ message: 'Could not fetch quizzes.' });

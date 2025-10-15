@@ -15,19 +15,19 @@ import { type QuizData } from '../Quiz';
 
 import { QuizItem } from './QuizItem';
 
-import type { ListQuizProps } from './ListQuiz.types';
+import type { ListQuizParams, ListQuizProps } from './ListQuiz.types';
 
-export const ListQuiz = ({ myQuizzes = false }: ListQuizProps) => {
-  const { isAuthenticated, isLoading: isAuthLoading } = useAuth0();
+export const ListQuiz = ({ myQuizzes = false, invited }: ListQuizProps) => {
+  const { isAuthenticated, isLoading: isAuthLoading, user } = useAuth0();
   const {
     data,
     isLoading,
     error,
     isValidating,
     mutate: refetch,
-  } = useFetch<QuizData[], { currentUserQuizzes: string }, string>({
+  } = useFetch<QuizData[], ListQuizParams, string>({
     path: API_ENDPOINTS.listQuizzes,
-    params: { currentUserQuizzes: myQuizzes ? 'yes' : 'no' },
+    params: { invited, myQuizzes, email: user?.email },
   });
 
   useEffect(() => {

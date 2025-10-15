@@ -88,16 +88,16 @@ export const getInvitedQuizzesForUser = async (
 ): Promise<Quiz[]> => {
   try {
     const invitedQuizzesSnapshot = await db
-      .collectionGroup(FIRESTORE_COLLECTIONS.invited)
+      .collection(FIRESTORE_COLLECTIONS.invited)
       .where('userEmail', '==', userEmail)
       .get();
 
     const quizIds: string[] = [];
     invitedQuizzesSnapshot.forEach((doc) => {
-      // The parent of the 'invited' document is the specific quiz document.
-      const quizId = doc.ref.parent.parent?.id;
-      if (quizId) {
-        quizIds.push(quizId);
+      const invitationData = doc.data();
+
+      if (invitationData && invitationData.quizId) {
+        quizIds.push(invitationData.quizId);
       }
     });
 

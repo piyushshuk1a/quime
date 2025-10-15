@@ -9,21 +9,35 @@ import { ListQuiz as ListQuizContainer } from '@/containers';
 
 import { TabPanel } from '../CreateQuiz';
 
+const TAB_INDEX_TO_TAB_QUERY = {
+  0: 'explore',
+  1: 'myQuizzes',
+  2: 'invitations',
+};
+
+const TAB_QUERY_TO_TAB_INDEX = {
+  explore: 0,
+  myQuizzes: 1,
+  invitations: 2,
+};
+
 export const ListQuiz = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeTabQuery = searchParams.get('tab');
+  const activeTabQuery = searchParams.get(
+    'tab',
+  ) as keyof typeof TAB_QUERY_TO_TAB_INDEX;
   const [activeTab, setActiveTab] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (activeTabQuery) {
-      setActiveTab(activeTabQuery === 'myQuizzes' ? 1 : 0);
+      setActiveTab(TAB_QUERY_TO_TAB_INDEX[activeTabQuery]);
     }
   }, [activeTabQuery]);
 
   const handleTabChange = (index: number) => {
     const urlSearchParams = new URLSearchParams();
-    urlSearchParams.set('tab', index === 0 ? 'explore' : 'myQuizzes');
+    urlSearchParams.set('tab', TAB_INDEX_TO_TAB_QUERY[index as 0 | 1 | 2]);
     setSearchParams(urlSearchParams);
   };
 
@@ -56,12 +70,16 @@ export const ListQuiz = () => {
           >
             <Tab label="Take a Quiz" />
             <Tab label="My Quizzes" />
+            <Tab label="Invitation" />
           </Tabs>
           <TabPanel active={activeTab} index={0}>
             <ListQuizContainer />
           </TabPanel>
           <TabPanel active={activeTab} index={1}>
             <ListQuizContainer myQuizzes />
+          </TabPanel>
+          <TabPanel active={activeTab} index={2}>
+            <ListQuizContainer invited />
           </TabPanel>
         </Box>
       </Container>
