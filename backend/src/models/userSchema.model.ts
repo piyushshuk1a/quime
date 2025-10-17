@@ -7,4 +7,6 @@ export interface User {
   createdAt: admin.firestore.FieldValue;
   lastLoginAt?: admin.firestore.FieldValue;
   profilePictureUrl?: string;
+  firstName: string;
+  lastName: string;
 }

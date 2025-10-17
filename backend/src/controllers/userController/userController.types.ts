@@ -6,8 +6,13 @@ type UserIdParam = {
   id: string;
 };
 
-export type UpdateRoleRequest = Request<
+export type CreateUserRequest = Request<
   UserIdParam,
   unknown,
-  { role: ObjectValuesUnion<typeof USER_ROLES>; email: string }
+  {
+    role: ObjectValuesUnion<typeof USER_ROLES>;
+    email: string;
+    firstName: string;
+    lastName: string;
+  }
 >;

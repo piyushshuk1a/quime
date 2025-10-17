@@ -1,4 +1,4 @@
 export * from './swr';
-export * from './useRoleSync';
+export * from './useCompleteSignup';
 export * from './useSignupRole';
 export * from './useUserInfo';

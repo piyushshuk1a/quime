@@ -11,6 +11,8 @@ import {
   DialogContentText,
   DialogTitle,
   LinearProgress,
+  TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
@@ -27,14 +29,19 @@ import { NAVY_BLUE } from '@/theme';
 import { useMutation } from './swr';
 import { useSignupRole, type UserRoles } from './useSignupRole';
 
-type UpdateRolePayload = { role: UserRoles; email: string };
+type CompleteSignupPayload = {
+  role: UserRoles;
+  email: string;
+  firstName: string;
+  lastName: string;
+};
 
-export const useRoleSync = () => {
+export const useCompleteSignup = () => {
   const { isAuthenticated, user, getAccessTokenWithPopup } = useAuth0();
   const [isRoleDialogOpen, setIsRoleDialogOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState<UserRoles>();
-  const { trigger: updateRole, isMutating: isUpdatingRole } =
-    useMutation<UpdateRolePayload>({
+  const { trigger: completeSignup, isMutating: isUpdatingRole } =
+    useMutation<CompleteSignupPayload>({
       path: user
         ? generatePath(API_ENDPOINTS.userRole, { id: user.sub ?? '' })
         : '',
@@ -48,12 +55,19 @@ export const useRoleSync = () => {
       },
     });
   const { role: signUpRole } = useSignupRole();
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
 
   const handleUpdateRole = useCallback(
     (role: UserRoles) => {
-      return updateRole({ role, email: user?.email as string });
+      return completeSignup({
+        role,
+        email: user?.email as string,
+        firstName,
+        lastName,
+      });
     },
-    [updateRole, user],
+    [completeSignup, user, firstName, lastName],
   );
 
   const syncUser = useCallback(async () => {
@@ -62,11 +76,11 @@ export const useRoleSync = () => {
 
     // If role available from the sign-up flow
     if (signUpRole) {
-      handleUpdateRole(signUpRole);
-    } else {
-      setIsRoleDialogOpen(true);
+      setSelectedRole(signUpRole);
     }
-  }, [isAuthenticated, user, signUpRole, handleUpdateRole]);
+
+    setIsRoleDialogOpen(true);
+  }, [isAuthenticated, user, signUpRole]);
 
   useEffect(() => {
     syncUser();
@@ -79,7 +93,7 @@ export const useRoleSync = () => {
   const activeBorderCandidate = '1px solid #8B5CF6';
   const activeBorderAdmin = '1px solid #6366F1';
 
-  const roleConfirmation = (
+  const completeSignupDialog = (
     <Dialog open={isRoleDialogOpen}>
       {isUpdatingRole && (
         <LinearProgress
@@ -93,8 +107,8 @@ export const useRoleSync = () => {
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Before we setup your account, please choose how you'll be using
-          QuizMaster. This helps us give you the right experience.
+          Before you set up your account, please tell us a little more about
+          yourself to get the best experience.
         </DialogContentText>
         <Box display="flex" gap={16} marginTop={24}>
           <Card
@@ -104,7 +118,7 @@ export const useRoleSync = () => {
             sx={{
               background: NAVY_BLUE[700],
               cursor: 'pointer',
-              flexGrow: 1,
+              width: '100%',
               '&:hover': { border: activeBorderCandidate },
               ...(selectedRole === USER_ROLES.candidate && {
                 border: activeBorderAdmin,
@@ -128,7 +142,7 @@ export const useRoleSync = () => {
             sx={{
               cursor: 'pointer',
               background: NAVY_BLUE[700],
-              flexGrow: 1,
+              width: '100%',
               '&:hover': { border: activeBorderAdmin },
               ...(selectedRole === USER_ROLES.admin && {
                 border: activeBorderAdmin,
@@ -146,18 +160,47 @@ export const useRoleSync = () => {
             </CardContent>
           </Card>
         </Box>
+        <Box display="flex" gap={16} marginTop={16}>
+          <TextField
+            fullWidth
+            value={firstName}
+            label="First Name"
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            label="Last Name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+        </Box>
       </DialogContent>
       <DialogActions>
-        <Button
-          variant="contained"
-          disabled={!selectedRole || isUpdatingRole}
-          onClick={() => handleRoleSelection(selectedRole as UserRoles)}
+        <Tooltip
+          arrow
+          slotProps={{
+            tooltip: { sx: { background: NAVY_BLUE[500] } },
+          }}
+          title="Please select role and update first name and last name"
         >
-          Continue
-        </Button>
+          <div>
+            <Button
+              variant="contained"
+              disabled={
+                !selectedRole ||
+                isUpdatingRole ||
+                !firstName?.trim() ||
+                !lastName?.trim()
+              }
+              onClick={() => handleRoleSelection(selectedRole as UserRoles)}
+            >
+              Continue
+            </Button>
+          </div>
+        </Tooltip>
       </DialogActions>
     </Dialog>
   );
 
-  return { roleConfirmation };
+  return { completeSignupDialog };
 };

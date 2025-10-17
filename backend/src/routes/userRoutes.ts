@@ -1,15 +1,15 @@
 import express from 'express';
 
 import {
+  createUser,
   getAllQuizzesForUser,
   getInvitedQuizzes,
-  updateRole,
 } from '@/controllers';
 import { checkJwt } from '@/middlewares';
 
 const router = express.Router();
 
-router.put('/:id', checkJwt, updateRole);
+router.put('/:id', checkJwt, createUser);
 
 router.get('/quizzes', checkJwt, getAllQuizzesForUser); // Get all quizzes for a user
 

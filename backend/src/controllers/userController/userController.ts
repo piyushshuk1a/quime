@@ -10,15 +10,19 @@ import {
 } from '@/services';
 import { getManagementApiToken } from '@/utils';
 
-import { UpdateRoleRequest } from './userController.types';
+import { CreateUserRequest } from './userController.types';
 
-export const updateRole = async (req: UpdateRoleRequest, res: Response) => {
+export const createUser = async (req: CreateUserRequest, res: Response) => {
   const { id } = req.params;
-  const { role, email } = req.body;
+  const { role, email, firstName, lastName } = req.body;
 
   // Validate the role
   if (role !== USER_ROLES.admin && role !== USER_ROLES.candidate) {
     return res.status(400).json({ message: USER_ERROR_MESSAGES.invalidRole });
+  }
+
+  if (!firstName?.trim() || !lastName?.trim()) {
+    return res.status(400).json({ message: USER_ERROR_MESSAGES.invalidName });
   }
 
   // Validate the email
@@ -31,6 +35,8 @@ export const updateRole = async (req: UpdateRoleRequest, res: Response) => {
       email,
       role,
       userId: id,
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
       createdAt: FieldValue.serverTimestamp(),
     });
 

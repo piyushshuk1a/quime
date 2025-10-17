@@ -2,7 +2,7 @@ import { Box, CircularProgress } from '@mui/material';
 import { Suspense } from 'react';
 
 import { Navbar } from '@/components';
-import { useRoleSync } from '@/hooks';
+import { useCompleteSignup } from '@/hooks';
 
 import { GuardedRoute } from './GuardedRoute';
 
@@ -11,7 +11,7 @@ export const RouteRenderer = ({
   isGuarded,
   hideNavbar,
 }: Omit<RouteConfigItem, 'path'>) => {
-  const { roleConfirmation } = useRoleSync();
+  const { completeSignupDialog } = useCompleteSignup();
 
   return (
     <Suspense
@@ -37,7 +37,7 @@ export const RouteRenderer = ({
         </>
       )}
       {isGuarded ? <GuardedRoute>{element}</GuardedRoute> : element}
-      {roleConfirmation}
+      {completeSignupDialog}
     </Suspense>
   );
 };
