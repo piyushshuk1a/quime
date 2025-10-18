@@ -1,18 +1,13 @@
 import { AccessTime, Leaderboard, Stars } from '@mui/icons-material';
-import { alpha, Box, Card, Chip, Stack, Typography } from '@mui/material';
+import { Box, Card, Chip, Stack, Typography } from '@mui/material';
 import { generatePath, useNavigate } from 'react-router';
 
 import { Button } from '@/components';
 import { ROUTES } from '@/constants';
 
-import type { QuizItemProps } from './ListQuiz.types';
+import { COMPLEXITY_CHIP_COLOR_MAP } from './ListQuiz.config';
 
-const COMPLEXITY_CHIP_COLOR_MAP = {
-  Easy: alpha('#08CB00', 0.7),
-  Medium: alpha('#FCC61D', 0.6),
-  Hard: alpha('#FFB5B5', 0.8),
-  Advanced: alpha('#EE66A6', 0.7),
-} as const;
+import type { QuizItemProps } from './ListQuiz.types';
 
 export const QuizItem = ({
   id = '',
