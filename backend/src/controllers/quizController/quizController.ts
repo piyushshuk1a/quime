@@ -7,6 +7,7 @@ import {
   getAllPublicQuizzes,
   getAllUserQuizzes,
   getInvitedQuizzesForUser,
+  getQuizAttempt,
   getQuizById,
   updateQuizAndQuestions,
 } from '@/services';
@@ -111,9 +112,11 @@ export const getQuizByIdController = async (
   res: Response,
 ) => {
   const id = req.params.id;
+  const userId = req.auth?.payload?.sub as string;
 
   try {
-    const quizData = await getQuizById(id);
+    const quizAttempt = await getQuizAttempt(userId, id);
+    const quizData = await getQuizById(id, !!quizAttempt, userId);
 
     if (!quizData) {
       return res.status(200).send({});

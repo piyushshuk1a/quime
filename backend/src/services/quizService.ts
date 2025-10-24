@@ -76,9 +76,12 @@ export const updateQuizAndQuestions = async (
   }
 };
 
+type WithOrWithoutAnswers = PartialBy<Question, 'correctOptions'>;
 export const getQuizById = async (
   quizId: string,
-): Promise<(Quiz & { questions: Question[] }) | null> => {
+  includeAnswers: boolean,
+  userId: string,
+): Promise<(Quiz & { questions: WithOrWithoutAnswers[] }) | null> => {
   try {
     const quizDocRef = db.collection(FIRESTORE_COLLECTIONS.quizzes).doc(quizId);
     const quizDoc = await quizDocRef.get();
@@ -96,15 +99,24 @@ export const getQuizById = async (
       .orderBy('order')
       .get();
 
-    const questions: Question[] = [];
+    const quizDocData = {
+      id: quizDoc.id,
+      ...(quizDoc.data() as Quiz),
+    };
+    const questions: WithOrWithoutAnswers[] = [];
     questionsQuerySnapshot.forEach((doc) => {
-      questions.push({ ...(doc.data() as Question) });
+      const { correctOptions, ...restQData } = doc.data() as Question;
+      const includeCorrectOptions =
+        includeAnswers || userId === quizDocData.publishedBy;
+      questions.push({
+        ...restQData,
+        ...(includeCorrectOptions && { correctOptions }),
+      });
     });
 
     // Combine quiz data and questions
     const quizData = {
-      id: quizDoc.id,
-      ...(quizDoc.data() as Quiz),
+      ...quizDocData,
       questions: questions,
     };
 

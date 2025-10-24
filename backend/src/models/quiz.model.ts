@@ -18,7 +18,6 @@ export interface Quiz {
   publishedBy: string;
   durationMinutes: number;
   totalQuestions: number;
-  // invited: Array<{ userId: string; obtainedPoints: number }>; // sub-collection logic
   // questions: Array<Question>; // Moved to sub-collection logic
 }
 
@@ -29,11 +28,4 @@ export interface Question {
   order: number;
   options: Option[];
   correctOptions: string[];
-}
-
-export interface Invited {
-  userEmail: string;
-  obtainedPoints: number;
-  status: 'attempted' | 'invite_sent';
-  quizId: string;
 }

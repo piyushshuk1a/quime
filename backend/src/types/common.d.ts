@@ -3,3 +3,8 @@
  * @note TObject denotes the type of the object
  */
 type ObjectValuesUnion<TObject> = TObject[keyof TObject];
+
+/**
+ * A utility type to make given fields optional
+ */
+type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;

@@ -1,7 +1,7 @@
 export const FIRESTORE_COLLECTIONS = {
   users: 'users',
   quizzes: 'quizzes',
-  quizzesAttempted: 'quizzesAttempted',
+  quizAttempts: 'quizAttempts',
   questions: 'questions',
   invited: 'invited',
 } as const;
