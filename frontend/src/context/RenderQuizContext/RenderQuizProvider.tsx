@@ -26,6 +26,10 @@ export const RenderQuizProvider: React.FC<RenderQuizProviderProps> = ({
     setCurrentQuestionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
   };
 
+  const goToQuestion = (index: number) => {
+    setCurrentQuestionIndex(index);
+  };
+
   const setAnswer = (questionIndex: number, answer: string[]) => {
     setUserAnswers((prevAnswers) => ({
       ...prevAnswers,
@@ -42,6 +46,7 @@ export const RenderQuizProvider: React.FC<RenderQuizProviderProps> = ({
     goToNextQuestion,
     goToPreviousQuestion,
     setAnswer,
+    goToQuestion,
   };
 
   return (

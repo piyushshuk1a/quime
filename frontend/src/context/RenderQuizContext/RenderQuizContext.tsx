@@ -9,7 +9,8 @@ interface RenderQuizState {
   userAnswers: Record<number, string[]>;
   goToNextQuestion: () => void;
   goToPreviousQuestion: () => void;
-  setAnswer: (order: number, answer: string[]) => void;
+  goToQuestion: (index: number) => void;
+  setAnswer: (index: number, answer: string[]) => void;
 }
 
 export const RenderQuizContext = createContext<RenderQuizState | undefined>(
