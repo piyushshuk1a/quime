@@ -37,3 +37,8 @@ export type QuizResultInfoProps = {
   label: string;
   icon: ReactNode;
 };
+
+export type AttemptQuizProps = {
+  isOpen: boolean;
+  onClose: () => void;
+};
