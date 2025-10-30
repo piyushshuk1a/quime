@@ -20,7 +20,7 @@ export const QuizCompleted = () => {
           justifyContent="space-between"
           mt={20}
         >
-          <Typography component="h1" variant="h4">
+          <Typography component="h1" variant="h4" sx={{ fontWeight: 700 }}>
             {quizInfo.title}
           </Typography>
           <Button

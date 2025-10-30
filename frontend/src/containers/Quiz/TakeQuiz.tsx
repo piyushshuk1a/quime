@@ -1,9 +1,11 @@
 import { PlayArrow, Visibility } from '@mui/icons-material';
 import { Box, Button, Stack, Typography } from '@mui/material';
+import { useState } from 'react';
 
 import { Container } from '@/components';
 import { useRenderQuiz } from '@/context';
 
+import { AttemptQuiz } from './AttemptQuiz';
 import { CreatedBy } from './CreatedBy';
 import { QuizDetails } from './QuizDetails';
 
@@ -11,6 +13,7 @@ import type { QuizProps } from './Quiz.types';
 
 export const TakeQuiz = ({ isOwner }: Omit<QuizProps, 'isCompleted'>) => {
   const { quizInfo } = useRenderQuiz();
+  const [isQuizOpen, setIsQuizOpen] = useState(false);
 
   return (
     <Box display="flex" alignItems="center" justifyContent="center">
@@ -21,7 +24,7 @@ export const TakeQuiz = ({ isOwner }: Omit<QuizProps, 'isCompleted'>) => {
           justifyContent="space-between"
           mt={20}
         >
-          <Typography component="h1" variant="h4">
+          <Typography component="h1" variant="h4" sx={{ fontWeight: 700 }}>
             {quizInfo.title}
           </Typography>
           {!isOwner && (
@@ -29,6 +32,7 @@ export const TakeQuiz = ({ isOwner }: Omit<QuizProps, 'isCompleted'>) => {
               color="primary"
               variant="contained"
               startIcon={<PlayArrow />}
+              onClick={() => setIsQuizOpen(true)}
             >
               Start Quiz
             </Button>
@@ -52,6 +56,7 @@ export const TakeQuiz = ({ isOwner }: Omit<QuizProps, 'isCompleted'>) => {
           </Stack>
         </Box>
       </Container>
+      <AttemptQuiz isOpen={isQuizOpen} onClose={() => setIsQuizOpen(false)} />
     </Box>
   );
 };
