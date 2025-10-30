@@ -167,7 +167,7 @@ export const AttemptQuizSidebar = () => {
           }}
           variant="determinate"
           value={
-            ((Object.keys(userAnswers).length || 1) / quizInfo.totalQuestions) *
+            ((Object.keys(userAnswers).length ?? 0) / quizInfo.totalQuestions) *
             100
           }
         />
