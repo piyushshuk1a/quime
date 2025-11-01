@@ -147,9 +147,9 @@ export const AttemptQuizSidebar = () => {
           ))}
         </Box>
         <Box display="flex" justifyContent="space-between">
-          <QuestionColorIndicator state="Current" />
-          <QuestionColorIndicator state="Answered" />
-          <QuestionColorIndicator state="Unanswered" />
+          <QuestionColorIndicator key="current" state="Current" />
+          <QuestionColorIndicator key="answered" state="Answered" />
+          <QuestionColorIndicator key="unanswered" state="Unanswered" />
         </Box>
       </Stack>
       <Card

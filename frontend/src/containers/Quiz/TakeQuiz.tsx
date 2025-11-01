@@ -8,13 +8,14 @@ import {
   type CircularProgressProps,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { generatePath, useParams } from 'react-router';
 
 import { Container } from '@/components';
 import { API_ENDPOINTS } from '@/constants';
 import { useRenderQuiz } from '@/context';
 import { useMutation } from '@/hooks';
+import { Timer } from '@/utils';
 
 import { AttemptQuiz } from './AttemptQuiz';
 import { CreatedBy } from './CreatedBy';
@@ -41,10 +42,27 @@ export const TakeQuiz = ({ isOwner }: Omit<QuizProps, 'isCompleted'>) => {
       );
     },
   });
+  const timerRef = useRef<undefined | NodeJS.Timeout>(undefined);
+  const [remainingTime, setRemainingTime] = useState('');
+
+  const quizTimer = new Timer(
+    quizInfo.durationMinutes * 60 * 1000,
+    handleSubmit,
+  );
 
   const handleStartQuiz = () => {
     startQuiz({});
+    quizTimer.start();
+    timerRef.current = setInterval(() => {
+      setRemainingTime(quizTimer.getFormattedRemainingTime());
+    }, 1000);
   };
+
+  useEffect(() => {
+    return () => clearInterval(timerRef.current);
+  }, []);
+
+  function handleSubmit() {}
 
   return (
     <Box display="flex" alignItems="center" justifyContent="center">
@@ -97,7 +115,11 @@ export const TakeQuiz = ({ isOwner }: Omit<QuizProps, 'isCompleted'>) => {
           </Stack>
         </Box>
       </Container>
-      <AttemptQuiz isOpen={isQuizOpen} onClose={() => setIsQuizOpen(false)} />
+      <AttemptQuiz
+        remainingTime={remainingTime}
+        isOpen={isQuizOpen}
+        onClose={() => setIsQuizOpen(false)}
+      />
     </Box>
   );
 };

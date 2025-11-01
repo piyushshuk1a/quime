@@ -11,7 +11,11 @@ import { Question } from './Question';
 
 import type { AttemptQuizProps } from './Quiz.types';
 
-export const AttemptQuiz = ({ isOpen, onClose }: AttemptQuizProps) => {
+export const AttemptQuiz = ({
+  isOpen,
+  onClose,
+  remainingTime,
+}: AttemptQuizProps) => {
   const { quizInfo } = useRenderQuiz();
 
   return (
@@ -43,7 +47,7 @@ export const AttemptQuiz = ({ isOpen, onClose }: AttemptQuizProps) => {
         <Box display="flex" gap={10} alignItems="center">
           <Box display="flex" alignItems="center" gap={4} sx={{ opacity: 0.4 }}>
             <AccessTimeFilled sx={{ fontSize: 16 }} />
-            <Typography variant="body2">43:24</Typography>
+            <Typography variant="body2">{remainingTime}</Typography>
           </Box>
           <Button variant="text" onClick={onClose}>
             Submit
