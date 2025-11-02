@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 import { FIRESTORE_COLLECTIONS, ROLE_NAMESPACE, USER_ROLES } from '@/config';
 import { db, FieldValue } from '@/firebase';
+import { Question } from '@/models';
 import {
   createQuiz,
   getAllPublicQuizzes,
@@ -154,5 +155,77 @@ export const startQuizController = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+export const submitQuizController = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const userId = req.auth?.payload?.sub as string;
+
+  try {
+    const quizAttempt = await getQuizAttempt(userId, id);
+    const quizData = await getQuizById(id, true, userId);
+
+    if (!req.body.data)
+      return res.status(400).json({ message: 'Invalid Request' });
+
+    const answers = req.body.data as {
+      order: number;
+      selectedOptions: string[];
+    }[];
+
+    if (!quizData) return res.status(400).json({ message: 'Quiz not found' });
+
+    const correctAnswers: Record<
+      number,
+      { correctOptions: string[]; points: number }
+    > = {}; // map between order and correct options
+
+    for (const quest of quizData.questions) {
+      const { order, correctOptions, points } = quest as Question;
+      correctAnswers[order] = { correctOptions, points };
+    }
+
+    const answerData: {
+      order: number;
+      selectedOptions: string[];
+      isCorrect: boolean;
+    }[] = [];
+    let score = 0;
+    const maxPossibleScore = quizData?.questions.reduce(
+      (maxScore, curr) => curr.points + maxScore,
+      0,
+    );
+    for (const ans of answers) {
+      const { order, selectedOptions } = ans;
+      const correctOptions = correctAnswers[order].correctOptions;
+
+      if (
+        correctOptions.length === selectedOptions.length &&
+        correctOptions.every((option) => selectedOptions.includes(option))
+      ) {
+        score += correctAnswers[order].points;
+        answerData.push({ order, selectedOptions, isCorrect: true });
+      } else answerData.push({ order, selectedOptions, isCorrect: false });
+    }
+
+    const quizAttemptData = {
+      ...(quizAttempt ?? {}),
+      quizId: id,
+      userId: userId,
+      maxPossibleScore,
+      score,
+      percentage: Math.trunc((score / maxPossibleScore) * 100),
+      completedAt: FieldValue.serverTimestamp(),
+      status: 'completed' as const,
+      answers: answerData,
+    };
+    console.log(quizAttemptData);
+    await upsertQuizAttempt(quizAttemptData);
+
+    return res.status(200).json({ status: 'Ok' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Something went wrong' });
   }
 };

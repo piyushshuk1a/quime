@@ -25,7 +25,7 @@ import type { QuizProps } from './Quiz.types';
 
 export const TakeQuiz = ({ isOwner }: Omit<QuizProps, 'isCompleted'>) => {
   const { id } = useParams() as { id: string };
-  const { quizInfo } = useRenderQuiz();
+  const { quizInfo, userAnswers, questions } = useRenderQuiz();
   const [isQuizOpen, setIsQuizOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const { trigger: startQuiz, isMutating: isStartingQuiz } = useMutation<
@@ -40,6 +40,19 @@ export const TakeQuiz = ({ isOwner }: Omit<QuizProps, 'isCompleted'>) => {
         'Oops! Something went wrong. Please try again after refreshing.',
         { variant: 'error' },
       );
+    },
+  });
+  const { trigger: submitQuiz, isMutating: isSubmittingQuiz } = useMutation<{
+    data: Record<string, string[] | number>[];
+  }>({
+    path: generatePath(API_ENDPOINTS.submitQuiz, { id }),
+    onSuccess: () => {
+      setIsQuizOpen(false);
+    },
+    onError: () => {
+      enqueueSnackbar('Oops! Something went wrong. Please try again', {
+        variant: 'error',
+      });
     },
   });
   const timerRef = useRef<undefined | NodeJS.Timeout>(undefined);
@@ -62,7 +75,13 @@ export const TakeQuiz = ({ isOwner }: Omit<QuizProps, 'isCompleted'>) => {
     return () => clearInterval(timerRef.current);
   }, []);
 
-  function handleSubmit() {}
+  function handleSubmit() {
+    const answers = Object.entries(userAnswers).map(([index, selected]) => {
+      const order = questions[Number(index)].order;
+      return { order, selectedOptions: selected };
+    });
+    submitQuiz({ data: answers });
+  }
 
   return (
     <Box display="flex" alignItems="center" justifyContent="center">
@@ -119,6 +138,8 @@ export const TakeQuiz = ({ isOwner }: Omit<QuizProps, 'isCompleted'>) => {
         remainingTime={remainingTime}
         isOpen={isQuizOpen}
         onClose={() => setIsQuizOpen(false)}
+        onSubmit={handleSubmit}
+        isSubmitting={isSubmittingQuiz}
       />
     </Box>
   );

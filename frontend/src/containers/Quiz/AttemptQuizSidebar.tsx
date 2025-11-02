@@ -99,6 +99,8 @@ export const AttemptQuizSidebar = () => {
       borderRight="1px solid #374151"
       bgcolor="#1F2937"
       width={pxToRem(320)}
+      position="relative"
+      zIndex={1000}
       padding={20}
       gap={24}
     >

@@ -42,4 +42,6 @@ export type AttemptQuizProps = {
   isOpen: boolean;
   onClose: () => void;
   remainingTime: string;
+  onSubmit: () => void;
+  isSubmitting: boolean;
 };

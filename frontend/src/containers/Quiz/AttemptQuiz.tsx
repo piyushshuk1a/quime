@@ -1,5 +1,5 @@
 import { AccessTimeFilled } from '@mui/icons-material';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, LinearProgress, Stack, Typography } from '@mui/material';
 
 import { Button } from '@/components';
 import { useRenderQuiz } from '@/context';
@@ -13,8 +13,9 @@ import type { AttemptQuizProps } from './Quiz.types';
 
 export const AttemptQuiz = ({
   isOpen,
-  onClose,
   remainingTime,
+  onSubmit,
+  isSubmitting,
 }: AttemptQuizProps) => {
   const { quizInfo } = useRenderQuiz();
 
@@ -49,12 +50,15 @@ export const AttemptQuiz = ({
             <AccessTimeFilled sx={{ fontSize: 16 }} />
             <Typography variant="body2">{remainingTime}</Typography>
           </Box>
-          <Button variant="text" onClick={onClose}>
+          <Button variant="text" onClick={onSubmit}>
             Submit
           </Button>
         </Box>
       </Box>
-      <Box display="flex">
+      <Box display="flex" position="relative">
+        {isSubmitting && (
+          <LinearProgress sx={{ position: 'absolute', left: 0, right: 0 }} />
+        )}
         <AttemptQuizSidebar />
         <Box
           height="calc(100vh - 72px)"

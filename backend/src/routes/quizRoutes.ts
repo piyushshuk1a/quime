@@ -5,6 +5,7 @@ import {
   getAllPublicQuizzesController,
   getQuizByIdController,
   startQuizController,
+  submitQuizController,
 } from '@/controllers';
 import { checkJwt, decodeToken } from '@/middlewares';
 
@@ -19,6 +20,6 @@ router.get('/:id/invited', checkJwt, () => {}); // Get invited candidates for a 
 router.put('/:id/invite', checkJwt, () => {}); // Invite candidates for a quiz
 
 router.post('/:id/start', checkJwt, startQuizController); // Start a quiz
-router.put('/:id/submit', checkJwt, () => {}); // Submit a quiz
+router.post('/:id/submit', checkJwt, submitQuizController); // Submit a quiz
 
 export default router;
