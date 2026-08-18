@@ -72,7 +72,16 @@ export const Navbar = () => {
         )}
         {isAuthenticated && (
           <Box display="flex" gap={12}>
-            <Button color="secondary" onClick={() => logout()}>
+            <Button
+              color="secondary"
+              onClick={() =>
+                logout({
+                  logoutParams: {
+                    returnTo: import.meta.env.VITE_APP_BASE_URL,
+                  },
+                })
+              }
+            >
               Log Out
             </Button>
           </Box>
